@@ -9,6 +9,7 @@ const keypress = async () => {
     })
   );
 };
+
 export default async (myAccount: Account) => {
   try {
     // let myAccount = createAccount();
