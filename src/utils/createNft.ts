@@ -22,11 +22,11 @@ const keypress = async () => {
 
 const DISPENSERACCOUNT =
   'HZ57J3K46JIJXILONBBZOHX6BKPXEM2VVXNRFSUED6DKFD5ZD24PMJ3MVA';
-async function createAsset(algodClient: algosdk.Algodv2, alice: Account) {
+async function createAsset(algodClient: algosdk.Algodv2, account: Account) {
   console.log('');
   console.log('==> CREATE ASSET');
   //Check account balance
-  const accountInfo = await algodClient.accountInformation(alice.addr).do();
+  const accountInfo = await algodClient.accountInformation(account.addr).do();
   const startingAmount = accountInfo.amount;
   console.log('Alice account balance: %d microAlgos', startingAmount);
 
@@ -47,9 +47,9 @@ async function createAsset(algodClient: algosdk.Algodv2, alice: Account) {
   // Whether user accounts will need to be unfrozen before transacting
   const defaultFrozen = false;
   // Used to display asset units to user
-  const unitName = 'ALICEART';
+  const unitName = 'TEST';
   // Friendly name of the asset
-  const assetName = "Alice's Artwork@arc3";
+  const assetName = 'NFT TEST';
   // Optional string pointing to a URL relating to the asset
   const url = 'https://s3.amazonaws.com/your-bucket/metadata.json';
   // Optional hash commitment of some sort relating to the asset. 32 character length.
@@ -61,7 +61,7 @@ async function createAsset(algodClient: algosdk.Algodv2, alice: Account) {
   // by the current manager
   // Specified address can change reserve, freeze, clawback, and manager
   // If they are set to undefined at creation time, you will not be able to modify these later
-  const managerAddr = alice.addr; // OPTIONAL: FOR DEMO ONLY, USED TO DESTROY ASSET WITHIN
+  const managerAddr = account.addr; // OPTIONAL: FOR DEMO ONLY, USED TO DESTROY ASSET WITHIN
   // Specified address is considered the asset reserve
   // (it has no special privileges, this is only informational)
   const reserveAddr = undefined;
@@ -109,7 +109,7 @@ async function createAsset(algodClient: algosdk.Algodv2, alice: Account) {
 
   // signing and sending "txn" allows "addr" to create an asset
   const txn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
-    from: alice.addr,
+    from: account.addr,
     total,
     decimals,
     assetName,
@@ -124,7 +124,7 @@ async function createAsset(algodClient: algosdk.Algodv2, alice: Account) {
     suggestedParams: params,
   });
 
-  const rawSignedTxn = txn.signTxn(alice.sk);
+  const rawSignedTxn = txn.signTxn(account.sk);
   const tx = await algodClient.sendRawTransaction(rawSignedTxn).do();
   let assetID = null;
   // wait for transaction to be confirmed
@@ -143,8 +143,8 @@ async function createAsset(algodClient: algosdk.Algodv2, alice: Account) {
   assetID = confirmedTxn['asset-index'];
   // console.log("AssetID = " + assetID);
 
-  await printCreatedAsset(algodClient, alice.addr, assetID);
-  await printAssetHolding(algodClient, alice.addr, assetID);
+  await printCreatedAsset(algodClient, account.addr, assetID);
+  await printAssetHolding(algodClient, account.addr, assetID);
   console.log(
     'You can verify the metadata-hash above in the asset creation details'
   );
@@ -386,9 +386,9 @@ export async function createNFT(account: Account) {
     // CREATE ASSET
     const { assetID } = await createAsset(algodClient, account);
     // DESTROY ASSET
-    await destroyAsset(algodClient, account, assetID);
+    // await destroyAsset(algodClient, account, assetID);
     // CLOSEOUT ALGOS - Alice closes out Alogs to dispenser
-    await closeoutAliceAlgos(algodClient, account);
+    // await closeoutAliceAlgos(algodClient, account);
   } catch (err) {
     console.log('err', err);
   }

@@ -1,10 +1,12 @@
 import algosdk, { mnemonicToSecretKey } from 'algosdk';
-import { key } from './utils/constants';
+import { KEY, WALLET_KEY } from './utils/constants';
 import { createNFT } from './utils/createNft';
 import createTransaction from './utils/createTransaction';
 
-const myAccount = mnemonicToSecretKey(key);
+// const myAccount = mnemonicToSecretKey(KEY);
+
+const wallet = mnemonicToSecretKey(WALLET_KEY);
 
 // createTransaction(myAccount);
 
-createNFT(myAccount);
+createNFT(wallet);
